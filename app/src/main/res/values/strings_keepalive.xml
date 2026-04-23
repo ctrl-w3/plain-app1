@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="always_on_title">Always-On Mode</string>
+    <string name="always_on_intro">Combine these toggles to keep PlainApp (and your tunnel) running 24/7 — survives swipe-from-recents, Doze, and OEM background killers on Xiaomi, Realme, Oppo, Vivo, OnePlus and Samsung.</string>
+
+    <string name="always_on_section_app">App-side controls</string>
+    <string name="always_on_section_oem">Manual phone settings (per brand)</string>
+
+    <string name="always_on_battery_opt">Disable battery optimization</string>
+    <string name="always_on_battery_opt_desc">Required. Stops Doze from suspending the tunnel when the screen is off.</string>
+    <string name="always_on_battery_opt_done">Disabled — good</string>
+
+    <string name="always_on_accessibility">Enable Accessibility Service</string>
+    <string name="always_on_accessibility_desc">Biggest single win. Android keeps Accessibility services running with high priority — survives swipe-to-clear on MIUI/ColorOS.</string>
+    <string name="always_on_accessibility_done">Enabled — good</string>
+
+    <string name="always_on_vpn">Enable Keep-Alive VPN</string>
+    <string name="always_on_vpn_desc">Registers a do-nothing local VPN. After enabling, also turn on Settings > Network > VPN > Always-on VPN for PlainApp. While Always-on VPN is active, Android will not let the process die.</string>
+    <string name="always_on_vpn_open_settings">Open VPN settings</string>
+    <string name="always_on_vpn_done">Enabled — good</string>
+
+    <string name="always_on_device_admin">Enable Device Admin</string>
+    <string name="always_on_device_admin_desc">Bumps process priority and prevents accidental uninstall. To remove later, go to Settings > Security > Device admin apps and disable first.</string>
+    <string name="always_on_device_admin_done">Enabled — good</string>
+
+    <string name="always_on_watchdog">Enable 5-minute watchdog</string>
+    <string name="always_on_watchdog_desc">An exact alarm fires every 5 minutes and restarts the tunnel if it has died. Self-healing.</string>
+
+    <string name="always_on_oem_xiaomi">Xiaomi / Redmi / POCO (MIUI/HyperOS)</string>
+    <string name="always_on_oem_xiaomi_steps">1. Security app > Permissions > Autostart > enable PlainApp.\n2. Settings > Apps > PlainApp > Battery saver > No restrictions.\n3. Open recent apps, drag PlainApp card down, tap the padlock icon.</string>
+
+    <string name="always_on_oem_realme_oppo">Realme / Oppo (ColorOS)</string>
+    <string name="always_on_oem_realme_oppo_steps">1. Settings > Battery > App Battery Management > PlainApp > turn ON \"Allow background activity\" and \"Allow auto-launch\".\n2. Settings > Apps > Auto-launch > enable PlainApp.\n3. Lock the app card in recent apps.</string>
+
+    <string name="always_on_oem_vivo">Vivo / iQOO (FunTouch / OriginOS)</string>
+    <string name="always_on_oem_vivo_steps">1. iManager > App Manager > Autostart Manager > enable PlainApp.\n2. Settings > Battery > Background power consumption > PlainApp > Allow.\n3. Lock the app card in recent apps.</string>
+
+    <string name="always_on_oem_oneplus">OnePlus (OxygenOS)</string>
+    <string name="always_on_oem_oneplus_steps">1. Settings > Battery > Battery optimization > PlainApp > Don\'t optimize.\n2. Settings > Apps > PlainApp > Advanced > Battery > Allow background activity.\n3. Lock the app card in recent apps.</string>
+
+    <string name="always_on_oem_samsung">Samsung (One UI)</string>
+    <string name="always_on_oem_samsung_steps">1. Settings > Apps > PlainApp > Battery > Unrestricted.\n2. Settings > Device care > Battery > Background usage limits > Never sleeping apps > add PlainApp.\n3. Settings > Device care > Battery > More battery settings > turn OFF \"Put unused apps to sleep\".</string>
+
+    <string name="always_on_oem_stock">Pixel / Motorola / Nokia (stock Android)</string>
+    <string name="always_on_oem_stock_steps">Just disable battery optimization above. Stock Android will not kill a foreground service.</string>
+
+    <string name="always_on_what_you_get_title">What you get with everything enabled</string>
+    <string name="always_on_what_you_get">• Tunnel survives swiping the app away from recents.\n• Tunnel survives screen-off Doze (battery opt off + WakeLock).\n• Tunnel auto-restarts after a phone reboot.\n• 5-minute watchdog re-launches the tunnel if Android still kills it.\n• Accessibility + VPN sink make the OEM killer leave the app alone.\n• Device Admin bumps priority and prevents accidental uninstall.\n\nReality check: on Pixel/stock, this is effectively forever. On Xiaomi/Realme/Oppo/Vivo, this gets you ~99% uptime as long as you also did the manual brand-specific steps.</string>
+</resources>

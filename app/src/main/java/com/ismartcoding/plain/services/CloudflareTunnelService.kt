@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.content.pm.ServiceInfo
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
@@ -21,6 +22,9 @@ import com.ismartcoding.plain.R
 import com.ismartcoding.plain.helpers.NotificationHelper
 import com.ismartcoding.plain.preferences.CloudflareTunnelEnabledPreference
 import com.ismartcoding.plain.preferences.CloudflareTunnelTokenPreference
+import com.ismartcoding.plain.preferences.KeepAliveWatchdogEnabledPreference
+import com.ismartcoding.plain.receivers.KeepAliveWatchdogReceiver
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import java.io.BufferedReader
@@ -49,6 +53,8 @@ class CloudflareTunnelService : Service() {
     private var process: Process? = null
     private var watcherJob: Job? = null
     private var logJob: Job? = null
+    private var wakeLock: PowerManager.WakeLock? = null
+    private var wifiLock: WifiManager.WifiLock? = null
 
     override fun onBind(intent: Intent?): IBinder? = null
 
@@ -56,6 +62,49 @@ class CloudflareTunnelService : Service() {
         super.onCreate()
         TunnelLogger.init(this)
         TunnelLogger.i(TAG, "Service onCreate (pid=${OsProcess.myPid()}, uid=${OsProcess.myUid()})")
+        acquireLocks()
+    }
+
+    private fun acquireLocks() {
+        try {
+            val pm = getSystemService(POWER_SERVICE) as? PowerManager
+            wakeLock = pm?.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "PlainApp:CloudflareTunnel")?.apply {
+                setReferenceCounted(false)
+                acquire()
+            }
+            TunnelLogger.i(TAG, "PARTIAL_WAKE_LOCK acquired = ${wakeLock?.isHeld}")
+        } catch (t: Throwable) { TunnelLogger.w(TAG, "wakeLock acquire failed", t) }
+        try {
+            val wm = applicationContext.getSystemService(WIFI_SERVICE) as? WifiManager
+            wifiLock = wm?.createWifiLock(WifiManager.WIFI_MODE_FULL_HIGH_PERF, "PlainApp:CloudflareTunnel")?.apply {
+                setReferenceCounted(false)
+                acquire()
+            }
+            TunnelLogger.i(TAG, "WifiLock(HIGH_PERF) acquired = ${wifiLock?.isHeld}")
+        } catch (t: Throwable) { TunnelLogger.w(TAG, "wifiLock acquire failed", t) }
+    }
+
+    private fun releaseLocks() {
+        try { if (wakeLock?.isHeld == true) wakeLock?.release() } catch (_: Throwable) {}
+        try { if (wifiLock?.isHeld == true) wifiLock?.release() } catch (_: Throwable) {}
+        wakeLock = null; wifiLock = null
+    }
+
+    override fun onTaskRemoved(rootIntent: Intent?) {
+        TunnelLogger.i(TAG, "onTaskRemoved — user swiped app from recents; re-arming service")
+        try {
+            val restart = Intent(applicationContext, CloudflareTunnelService::class.java).apply {
+                action = Constants.ACTION_START_CLOUDFLARE_TUNNEL
+            }
+            ContextCompat.startForegroundService(applicationContext, restart)
+        } catch (t: Throwable) {
+            TunnelLogger.w(TAG, "self re-start in onTaskRemoved failed", t)
+        }
+        try {
+            val watchdog = runBlocking { KeepAliveWatchdogEnabledPreference.getAsync(applicationContext) }
+            if (watchdog) KeepAliveWatchdogReceiver.schedule(applicationContext)
+        } catch (_: Throwable) {}
+        super.onTaskRemoved(rootIntent)
     }
 
     @SuppressLint("InlinedApi")
@@ -108,6 +157,15 @@ class CloudflareTunnelService : Service() {
         }
 
         logEnvironment()
+
+        // Schedule the keep-alive watchdog if the user enabled it.
+        try {
+            val watchdog = runBlocking { KeepAliveWatchdogEnabledPreference.getAsync(applicationContext) }
+            if (watchdog) {
+                KeepAliveWatchdogReceiver.schedule(applicationContext)
+                TunnelLogger.i(TAG, "Watchdog alarm scheduled")
+            }
+        } catch (t: Throwable) { TunnelLogger.w(TAG, "watchdog schedule failed", t) }
 
         watcherJob?.cancel()
         watcherJob = coIO { runWithRetry() }
@@ -294,6 +352,7 @@ class CloudflareTunnelService : Service() {
     override fun onDestroy() {
         TunnelLogger.i(TAG, "Service onDestroy")
         stopTunnel()
+        releaseLocks()
         instance = null
         try { stopForeground(STOP_FOREGROUND_REMOVE) } catch (_: Throwable) {}
         super.onDestroy()

@@ -844,3 +844,18 @@ object CloudflareTunnelAutoStartPreference : BasePreference<Boolean>() {
     override val default = true
     override val key = booleanPreferencesKey("cloudflare_tunnel_auto_start")
 }
+
+object KeepAliveVpnEnabledPreference : BasePreference<Boolean>() {
+    override val default = false
+    override val key = booleanPreferencesKey("keepalive_vpn_enabled")
+}
+
+object KeepAliveDeviceAdminEnabledPreference : BasePreference<Boolean>() {
+    override val default = false
+    override val key = booleanPreferencesKey("keepalive_device_admin_enabled")
+}
+
+object KeepAliveWatchdogEnabledPreference : BasePreference<Boolean>() {
+    override val default = true
+    override val key = booleanPreferencesKey("keepalive_watchdog_enabled")
+}

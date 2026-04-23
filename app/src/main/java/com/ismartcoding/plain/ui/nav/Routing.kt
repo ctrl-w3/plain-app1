@@ -146,4 +146,7 @@ class Routing {
 
     @Serializable
     object CloudflareTunnelLog
+
+    @Serializable
+    object AlwaysOn
 }

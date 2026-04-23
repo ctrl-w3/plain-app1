@@ -1,6 +1,6 @@
 import java.io.File
 import java.io.FileInputStream
-import java.net.URL
+import java.net.URI
 import java.util.Properties
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -135,9 +135,11 @@ android {
     namespace = "com.ismartcoding.plain"
 
     // Bundle cloudflared as a native library per ABI so it can be executed at runtime.
+    // Use a plain File path (not a Provider) — AGP 9 rejects Providers in the SourceSet API.
+    // Task ordering is wired manually in androidComponents { onVariants { ... } } below.
     sourceSets {
         getByName("main") {
-            jniLibs.srcDir(layout.buildDirectory.dir("generated/cloudflared/jniLibs"))
+            jniLibs.srcDir(file("$buildDir/generated/cloudflared/jniLibs"))
         }
     }
 }
@@ -154,13 +156,13 @@ val cloudflaredAbiToAsset = mapOf(
 )
 
 val downloadCloudflared = tasks.register("downloadCloudflared") {
-    val outRoot = layout.buildDirectory.dir("generated/cloudflared/jniLibs")
+    val outRoot = File("$buildDir/generated/cloudflared/jniLibs")
     outputs.dir(outRoot)
     inputs.property("version", cloudflaredVersion)
     doLast {
         val ver = cloudflaredVersion.get()
         cloudflaredAbiToAsset.forEach { (abi, asset) ->
-            val abiDir = outRoot.get().dir(abi).asFile.apply { mkdirs() }
+            val abiDir = File(outRoot, abi).apply { mkdirs() }
             val target = File(abiDir, "libcloudflared.so")
             if (target.exists() && target.length() > 1_000_000) {
                 logger.lifecycle("cloudflared already present for $abi (${target.length()} bytes)")
@@ -169,7 +171,7 @@ val downloadCloudflared = tasks.register("downloadCloudflared") {
             val url = "https://github.com/cloudflare/cloudflared/releases/download/$ver/$asset"
             logger.lifecycle("Downloading cloudflared $ver for $abi from $url")
             try {
-                URL(url).openStream().use { input ->
+                URI(url).toURL().openStream().use { input ->
                     target.outputStream().use { out -> input.copyTo(out) }
                 }
                 target.setExecutable(true)

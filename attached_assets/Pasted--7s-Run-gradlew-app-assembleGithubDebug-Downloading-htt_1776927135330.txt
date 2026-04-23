@@ -1,0 +1,36 @@
+ 7s
+Run ./gradlew :app:assembleGithubDebug
+Downloading https://services.gradle.org/distributions/gradle-9.4.1-bin.zip
+.............10%.............20%.............30%.............40%.............50%.............60%..............70%.............80%.............90%.............100%
+Welcome to Gradle 9.4.1!
+Here are the highlights of this release:
+ - Java 26 support
+ - Non-class-based JVM tests
+ - Enhanced console progress bar
+For more details see https://docs.gradle.org/9.4.1/release-notes.html
+Starting a Gradle Daemon (subsequent builds will be faster)
+Calculating task graph as no cached configuration is available for tasks: :app:assembleGithubDebug
+> Configure project :app
+WARNING: The option setting 'android.disallowKotlinSourceSets=false' is experimental.
+The current default is 'true'.
+w: file:///home/runner/work/plain-app1/plain-app1/app/build.gradle.kts:140:21: 'fun srcDir(srcDir: Any): Any' is deprecated. Use `directories` mutable set instead.
+w: file:///home/runner/work/plain-app1/plain-app1/app/build.gradle.kts:172:17: 'constructor(p0: String!): URL' is deprecated. Deprecated in Java.
+Configuration cache entry stored.
+FAILURE: Build failed with an exception.
+* Where:
+Build file '/home/runner/work/plain-app1/plain-app1/app/build.gradle.kts' line: 140
+* What went wrong:
+Error : You cannot add Provider instances to the Android SourceSet API.
+It is not possible for Android Studio to determine if the Provider points
+to a directory that contains generated (read-only) or static (read-write) files. 
+Instead you should use the Sources interface in the Variant API, in particular
+SourceDirectories.addGeneratedDirectory and SourceDirectories.addStaticDirectories.
+You can re-enable the behavior by setting the `android.sourceset.disallowProvider=false` to gradle.properties.
+However, be aware that any Gradle Task dependency will not be automatically carried.
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+> Get more help at https://help.gradle.org.
+BUILD FAILED in 1m 5s
+Error: Process completed with exit code 1.

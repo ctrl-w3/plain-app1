@@ -823,3 +823,24 @@ object AiImageSearchEnabledPreference : BasePreference<Boolean>() {
     override val default = false
     override val key = booleanPreferencesKey("ai_image_search_enabled")
 }
+
+// ===== Cloudflare Tunnel =====
+object CloudflareTunnelTokenPreference : BasePreference<String>() {
+    override val default = ""
+    override val key = stringPreferencesKey("cloudflare_tunnel_token")
+}
+
+object CloudflareTunnelEnabledPreference : BasePreference<Boolean>() {
+    override val default = false
+    override val key = booleanPreferencesKey("cloudflare_tunnel_enabled")
+}
+
+object CloudflareTunnelHostnamePreference : BasePreference<String>() {
+    override val default = ""
+    override val key = stringPreferencesKey("cloudflare_tunnel_hostname")
+}
+
+object CloudflareTunnelAutoStartPreference : BasePreference<Boolean>() {
+    override val default = true
+    override val key = booleanPreferencesKey("cloudflare_tunnel_auto_start")
+}

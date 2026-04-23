@@ -100,6 +100,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Splash"
+        android:extractNativeLibs="true"
         android:usesCleartextTraffic="true">
         <activity
             android:name=".ui.MainActivity"
@@ -200,6 +201,16 @@
 
 
         <service
+            android:name=".services.CloudflareTunnelService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse|dataSync"
+            android:stopWithTask="true">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="cloudflare tunnel" />
+        </service>
+
+        <service
             android:name=".services.QSTileService"
             android:exported="true"
             android:icon="@drawable/app_icon"
@@ -218,6 +229,8 @@
                 <action android:name="${applicationId}.action.STOP_HTTP_SERVER" />
                 <action android:name="${applicationId}.action.STOP_SCREEN_MIRROR" />
                 <action android:name="${applicationId}.action.REPOST_HTTP_NOTIFICATION" />
+                <action android:name="${applicationId}.action.START_CLOUDFLARE_TUNNEL" />
+                <action android:name="${applicationId}.action.STOP_CLOUDFLARE_TUNNEL" />
             </intent-filter>
         </receiver>
 

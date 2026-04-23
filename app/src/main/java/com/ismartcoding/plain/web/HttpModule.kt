@@ -64,13 +64,19 @@ object HttpModule {
         }
 
         install(CORS) {
-            if (BuildConfig.DEBUG) {
-                allowHost("*")
-            } else {
-                allowHost("localhost:3000")
-                allowHost("127.0.0.1:3000")
-            }
+            // Allow access from any origin so the web console can be reached from any
+            // browser worldwide via a public hostname (Cloudflare Tunnel, etc.).
+            // Auth is handled by the app's own c-* headers, not cookies, so credentials
+            // mode is intentionally OFF to keep the wildcard origin valid for browsers.
+            anyHost()
+            allowNonSimpleContentTypes = true
             allowHeadersPrefixed("c-")
+            allowHeader(io.ktor.http.HttpHeaders.Authorization)
+            allowHeader(io.ktor.http.HttpHeaders.ContentType)
+            allowMethod(io.ktor.http.HttpMethod.Options)
+            allowMethod(io.ktor.http.HttpMethod.Put)
+            allowMethod(io.ktor.http.HttpMethod.Patch)
+            allowMethod(io.ktor.http.HttpMethod.Delete)
         }
 
         install(ConditionalHeaders)

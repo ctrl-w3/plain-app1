@@ -20,4 +20,6 @@ object Constants {
     const val ACTION_PEER_CHAT_REPLY = "${BuildConfig.APPLICATION_ID}.action.PEER_CHAT_REPLY"
     // On Android 14+ FGS notifications can be swiped away (OS policy). We re-post via deleteIntent.
     const val ACTION_REPOST_HTTP_NOTIFICATION = "${BuildConfig.APPLICATION_ID}.action.REPOST_HTTP_NOTIFICATION"
+    const val ACTION_START_CLOUDFLARE_TUNNEL = "${BuildConfig.APPLICATION_ID}.action.START_CLOUDFLARE_TUNNEL"
+    const val ACTION_STOP_CLOUDFLARE_TUNNEL = "${BuildConfig.APPLICATION_ID}.action.STOP_CLOUDFLARE_TUNNEL"
 }

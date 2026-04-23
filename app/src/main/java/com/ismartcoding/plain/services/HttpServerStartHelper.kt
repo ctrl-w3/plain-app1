@@ -10,6 +10,9 @@ import com.ismartcoding.plain.enums.HttpServerState
 import com.ismartcoding.plain.events.HttpServerStateChangedEvent
 import com.ismartcoding.plain.features.Permission
 import com.ismartcoding.plain.features.locale.LocaleHelper
+import com.ismartcoding.plain.preferences.CloudflareTunnelAutoStartPreference
+import com.ismartcoding.plain.preferences.CloudflareTunnelEnabledPreference
+import com.ismartcoding.plain.preferences.CloudflareTunnelTokenPreference
 import com.ismartcoding.plain.web.HttpServerManager
 import com.ismartcoding.plain.mdns.NsdHelper
 import kotlinx.coroutines.delay
@@ -77,6 +80,18 @@ object HttpServerStartHelper {
         onStateChanged(HttpServerState.ON)
         sendEvent(HttpServerStateChangedEvent(HttpServerState.ON))
         PNotificationListenerService.toggle(service, Permission.NOTIFICATION_LISTENER.isEnabledAsync(service))
+
+        // Auto-start Cloudflare Tunnel if user enabled it.
+        try {
+            val enabled = CloudflareTunnelEnabledPreference.getAsync(service)
+            val auto = CloudflareTunnelAutoStartPreference.getAsync(service)
+            val token = CloudflareTunnelTokenPreference.getAsync(service)
+            if (enabled && auto && token.isNotEmpty()) {
+                CloudflareTunnelManager.start(service)
+            }
+        } catch (e: Exception) {
+            LogCat.e("Failed to auto-start Cloudflare Tunnel: ${e.message}")
+        }
     }
 
     private fun handleFailure(

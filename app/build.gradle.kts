@@ -46,7 +46,7 @@ android {
         ndk {
             //noinspection ChromeOsAbiSupport
             abiFilters += abiFilterList.ifEmpty {
-                listOf("arm64-v8a")
+                listOf("arm64-v8a", "armeabi-v7a")
             }
         }
     }
@@ -119,7 +119,10 @@ android {
 
     packaging {
         jniLibs {
-            // useLegacyPackaging = true
+            // Required so the bundled cloudflared binary is extracted to the
+            // app's nativeLibraryDir with execute permission instead of being
+            // memory-mapped from the APK (which can't be ProcessBuilder-exec'd).
+            useLegacyPackaging = true
             excludes += listOf("META-INF/*")
             keepDebugSymbols += listOf("**/*.so")
         }
@@ -128,6 +131,65 @@ android {
         }
     }
     namespace = "com.ismartcoding.plain"
+
+    // Bundle cloudflared as a native library per ABI so it can be executed at runtime.
+    sourceSets {
+        getByName("main") {
+            jniLibs.srcDir(layout.buildDirectory.dir("generated/cloudflared/jniLibs"))
+        }
+    }
+}
+
+// ---------- Cloudflare Tunnel binary download ----------
+// Cloudflared releases (Linux ARM/ARM64 are usable on Android — same Linux kernel ABI).
+// We rename the binary to libcloudflared.so so Android packages it as an executable
+// native library inside applicationInfo.nativeLibraryDir (the only place modern Android
+// allows executing app-shipped binaries from).
+val cloudflaredVersion = providers.gradleProperty("cloudflaredVersion").orElse("2024.10.1")
+val cloudflaredAbiToAsset = mapOf(
+    "arm64-v8a" to "cloudflared-linux-arm64",
+    "armeabi-v7a" to "cloudflared-linux-arm",
+)
+
+val downloadCloudflared = tasks.register("downloadCloudflared") {
+    val outRoot = layout.buildDirectory.dir("generated/cloudflared/jniLibs")
+    outputs.dir(outRoot)
+    inputs.property("version", cloudflaredVersion)
+    doLast {
+        val ver = cloudflaredVersion.get()
+        cloudflaredAbiToAsset.forEach { (abi, asset) ->
+            val abiDir = outRoot.get().dir(abi).asFile.apply { mkdirs() }
+            val target = java.io.File(abiDir, "libcloudflared.so")
+            if (target.exists() && target.length() > 1_000_000) {
+                logger.lifecycle("cloudflared already present for $abi (${target.length()} bytes)")
+                return@forEach
+            }
+            val url = "https://github.com/cloudflare/cloudflared/releases/download/$ver/$asset"
+            logger.lifecycle("Downloading cloudflared $ver for $abi from $url")
+            try {
+                java.net.URL(url).openStream().use { input ->
+                    target.outputStream().use { out -> input.copyTo(out) }
+                }
+                target.setExecutable(true)
+            } catch (e: Exception) {
+                logger.warn("WARNING: failed to download cloudflared for $abi: ${e.message}. Tunnel feature will be disabled in this build.")
+                // Create an empty placeholder so Gradle does not fail the merge step.
+                if (!target.exists()) target.writeBytes(byteArrayOf(0x7f, 'E'.code.toByte(), 'L'.code.toByte(), 'F'.code.toByte()))
+            }
+        }
+    }
+}
+
+androidComponents {
+    onVariants { variant ->
+        // Ensure cloudflared is downloaded before native libs are merged.
+        afterEvaluate {
+            tasks.matching { it.name.startsWith("merge") && it.name.endsWith("JniLibFolders") }
+                .configureEach { dependsOn(downloadCloudflared) }
+            tasks.matching { it.name.startsWith("merge") && it.name.endsWith("NativeLibs") }
+                .configureEach { dependsOn(downloadCloudflared) }
+        }
+    }
 }
 
 tasks.withType<KotlinCompile>().configureEach {

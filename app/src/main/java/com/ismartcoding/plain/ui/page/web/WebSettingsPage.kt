@@ -78,6 +78,10 @@ fun WebSettingsPage(navController: NavHostController, webVM: WebConsoleViewModel
                             icon = R.drawable.lock, title = stringResource(R.string.security), showMore = true
                         )
                         PListItem(
+                            modifier = Modifier.clickable { navController.navigate(Routing.CloudflareTunnel) },
+                            icon = R.drawable.devices, title = stringResource(R.string.cloudflare_tunnel_title), showMore = true
+                        )
+                        PListItem(
                             modifier = Modifier.clickable { navController.navigate(Routing.HowToUse) },
                             icon = R.drawable.info, title = stringResource(R.string.how_to_use), showMore = true
                         )

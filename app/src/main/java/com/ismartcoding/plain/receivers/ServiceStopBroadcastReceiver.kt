@@ -9,6 +9,8 @@ import com.ismartcoding.plain.BuildConfig
 import com.ismartcoding.plain.Constants
 import com.ismartcoding.plain.preferences.AdbTokenPreference
 import com.ismartcoding.plain.preferences.WebPreference
+import com.ismartcoding.plain.preferences.CloudflareTunnelEnabledPreference
+import com.ismartcoding.plain.services.CloudflareTunnelManager
 import com.ismartcoding.plain.services.HttpServerService
 import com.ismartcoding.plain.services.ScreenMirrorService
 import com.ismartcoding.plain.web.HttpServerManager
@@ -44,6 +46,16 @@ class ServiceStopBroadcastReceiver : BroadcastReceiver() {
                 if (HttpServerService.isRunning()) {
                     ContextCompat.startForegroundService(context, Intent(context, HttpServerService::class.java))
                 }
+            }
+
+            Constants.ACTION_STOP_CLOUDFLARE_TUNNEL -> coIO {
+                CloudflareTunnelEnabledPreference.putAsync(context, false)
+                CloudflareTunnelManager.stop(context)
+            }
+
+            Constants.ACTION_START_CLOUDFLARE_TUNNEL -> coIO {
+                CloudflareTunnelEnabledPreference.putAsync(context, true)
+                CloudflareTunnelManager.start(context)
             }
         }
     }

@@ -130,6 +130,7 @@ fun MainNavGraph(
         composable<Routing.Sessions> { SessionsPage(navController) }
         composable<Routing.WebDev> { WebDevPage(navController) }
         composable<Routing.WebSecurity> { WebSecurityPage(navController) }
+        composable<Routing.CloudflareTunnel> { com.ismartcoding.plain.ui.page.web.CloudflareTunnelPage(navController) }
         composable<Routing.Chat> { backStackEntry ->
             val r = backStackEntry.toRoute<Routing.Chat>()
             ChatPage(navController, audioPlaylistVM = audioPlaylistVM, chatVM = chatVM, peerVM = peerVM, channelVM = channelVM, r.id)

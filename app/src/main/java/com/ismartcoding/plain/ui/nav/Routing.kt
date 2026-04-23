@@ -140,4 +140,7 @@ class Routing {
 
     @Serializable
     object DlnaCastHistory
+
+    @Serializable
+    object CloudflareTunnel
 }

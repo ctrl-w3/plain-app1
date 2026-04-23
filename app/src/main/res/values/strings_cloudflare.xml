@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="cloudflare_tunnel_title">Cloudflare Tunnel</string>
+    <string name="cloudflare_tunnel_intro">Expose your phone\'s web console to the internet through your own domain (e.g. shakti.buzz) using a free Cloudflare Tunnel. No port forwarding, no public IP, works on Wi-Fi and mobile data.</string>
+    <string name="cloudflare_tunnel_enabled">Enable tunnel</string>
+    <string name="cloudflare_tunnel_auto_start">Start with web service</string>
+    <string name="cloudflare_tunnel_auto_start_desc">Automatically start the tunnel when the web server starts.</string>
+    <string name="cloudflare_tunnel_token">Tunnel token</string>
+    <string name="cloudflare_tunnel_token_placeholder">Paste your Cloudflare tunnel token here</string>
+    <string name="cloudflare_tunnel_token_help">Get a token: Cloudflare Zero Trust → Networks → Tunnels → Create a tunnel → copy the token shown for the Docker / installer command.</string>
+    <string name="cloudflare_tunnel_hostname">Public hostname</string>
+    <string name="cloudflare_tunnel_hostname_help">In your tunnel\'s Public Hostname settings, point your subdomain (e.g. phone.shakti.buzz) to service http://localhost:8080 (use your phone\'s HTTP port).</string>
+    <string name="cloudflare_tunnel_open_dashboard">Open Cloudflare Dashboard</string>
+    <string name="cloudflare_tunnel_open_url">Open my public URL</string>
+    <string name="cloudflare_tunnel_battery_tip">For 24/7 uptime: disable battery optimization for this app, enable autostart in your phone settings, and keep PlainApp pinned in recent apps.</string>
+    <string name="cloudflare_tunnel_running">Cloudflare Tunnel is running</string>
+    <string name="cloudflare_tunnel_running_desc">Your phone is reachable on the internet through your custom domain.</string>
+    <string name="cloudflare_tunnel_status_running">Connected</string>
+    <string name="cloudflare_tunnel_status_starting">Starting…</string>
+    <string name="cloudflare_tunnel_status_error">Error</string>
+    <string name="cloudflare_tunnel_status_stopped">Stopped</string>
+    <string name="cloudflare_tunnel_no_token">Tunnel token is empty. Paste a token first.</string>
+    <string name="cloudflare_tunnel_binary_missing">Cloudflare tunnel binary missing from APK. Rebuild the app.</string>
+    <string name="save_and_apply">Save &amp; Apply</string>
+</resources>

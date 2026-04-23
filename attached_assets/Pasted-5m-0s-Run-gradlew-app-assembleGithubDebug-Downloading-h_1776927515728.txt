@@ -1,0 +1,120 @@
+5m 0s
+Run ./gradlew :app:assembleGithubDebug
+Downloading https://services.gradle.org/distributions/gradle-9.4.1-bin.zip
+.............10%.............20%.............30%.............40%.............50%.............60%..............70%.............80%.............90%.............100%
+Welcome to Gradle 9.4.1!
+Here are the highlights of this release:
+ - Java 26 support
+ - Non-class-based JVM tests
+ - Enhanced console progress bar
+For more details see https://docs.gradle.org/9.4.1/release-notes.html
+Starting a Gradle Daemon (subsequent builds will be faster)
+Calculating task graph as no cached configuration is available for tasks: :app:assembleGithubDebug
+> Configure project :app
+WARNING: The option setting 'android.disallowKotlinSourceSets=false' is experimental.
+The current default is 'true'.
+w: file:///home/runner/work/plain-app1/plain-app1/app/build.gradle.kts:142:21: 'fun srcDir(srcDir: Any): Any' is deprecated. Use `directories` mutable set instead.
+w: file:///home/runner/work/plain-app1/plain-app1/app/build.gradle.kts:142:35: 'var buildDir: File' is deprecated. Deprecated in Java.
+w: file:///home/runner/work/plain-app1/plain-app1/app/build.gradle.kts:159:26: 'var buildDir: File' is deprecated. Deprecated in Java.
+> Task :lib:preBuild UP-TO-DATE
+> Task :app:preBuild UP-TO-DATE
+> Task :app:preGithubDebugBuild UP-TO-DATE
+> Task :lib:preDebugBuild UP-TO-DATE
+> Task :app:mergeGithubDebugNativeDebugMetadata NO-SOURCE
+> Task :app:generateGithubDebugBuildConfig
+> Task :lib:processDebugNavigationResources
+> Task :lib:generateDebugResources
+> Task :app:generateGithubDebugResources
+> Task :lib:packageDebugResources
+> Task :app:packageGithubDebugResources
+> Task :lib:generateDebugAssets UP-TO-DATE
+> Task :lib:javaPreCompileDebug
+> Task :lib:mergeDebugAssets
+> Task :lib:extractDeepLinksDebug
+> Task :lib:writeDebugAarMetadata
+> Task :lib:parseDebugLocalResources
+> Task :lib:mapDebugSourceSetPaths
+> Task :lib:processDebugManifest
+> Task :lib:generateDebugRFile
+> Task :lib:compileDebugLibraryResources
+> Task :app:processGithubDebugNavigationResources
+> Task :app:parseGithubDebugLocalResources
+> Task :app:javaPreCompileGithubDebug
+> Task :app:generateGithubDebugAssets UP-TO-DATE
+> Task :app:generateGithubDebugRFile
+> Task :app:mergeGithubDebugAssets
+> Task :app:compressGithubDebugAssets
+> Task :app:desugarGithubDebugFileDependencies
+> Task :app:checkGithubDebugDuplicateClasses
+> Task :app:checkGithubDebugAarMetadata
+> Task :lib:compileDebugKotlin
+> Task :app:mergeExtDexGithubDebug
+> Task :lib:mergeDebugJniLibFolders
+> Task :lib:mergeDebugNativeLibs NO-SOURCE
+> Task :lib:copyDebugJniLibsProjectOnly
+> Task :app:mapGithubDebugSourceSetPaths
+> Task :app:compileGithubDebugNavigationResources
+> Task :lib:compileDebugJavaWithJavac
+> Task :lib:bundleLibCompileToJarDebug
+> Task :lib:bundleLibRuntimeToJarDebug
+> Task :lib:processDebugJavaRes
+> Task :lib:bundleLibRuntimeToDirDebug
+> Task :app:mergeGithubDebugResources
+> Task :app:createGithubDebugCompatibleScreenManifests
+> Task :app:extractDeepLinksGithubDebug
+> Task :app:processGithubDebugMainManifest
+/home/runner/work/plain-app1/plain-app1/app/src/main/AndroidManifest.xml:103:9-41 Warning:
+	android:extractNativeLibs should not be specified in this source AndroidManifest.xml file. See https://d.android.com/guide/topics/manifest/application-element#extractNativeLibs for more information.
+The AGP Upgrade Assistant can remove the attribute from the AndroidManifest.xml file and update the build file accordingly. See https://d.android.com/studio/build/agp-upgrade-assistant for more information.
+> Task :app:processGithubDebugManifest
+> Task :app:processGithubDebugManifestForPackage
+> Task :app:mergeLibDexGithubDebug
+> Task :app:processGithubDebugResources
+> Task :app:downloadCloudflared
+Downloading cloudflared 2024.10.1 for arm64-v8a from https://github.com/cloudflare/cloudflared/releases/download/2024.10.1/cloudflared-linux-arm64
+Downloading cloudflared 2024.10.1 for armeabi-v7a from https://github.com/cloudflare/cloudflared/releases/download/2024.10.1/cloudflared-linux-arm
+> Task :app:mergeGithubDebugJniLibFolders
+> Task :app:mergeGithubDebugNativeLibs
+> Task :app:validateSigningGithubDebug
+> Task :app:writeGithubDebugAppMetadata
+> Task :app:writeGithubDebugSigningConfigVersions
+> Task :app:stripGithubDebugDebugSymbols
+> Task :app:kspGithubDebugKotlin
+e: file:///home/runner/work/plain-app1/plain-app1/app/src/main/java/com/ismartcoding/plain/ui/page/web/CloudflareTunnelLogPage.kt:64:35 No value passed for parameter 'onClick'.
+> Task :app:compileGithubDebugKotlin
+e: file:///home/runner/work/plain-app1/plain-app1/app/src/main/java/com/ismartcoding/plain/ui/page/web/CloudflareTunnelLogPage.kt:64:100 Argument type mismatch: actual type is '() -> Job', but 'Boolean' was expected.
+e: file:///home/runner/work/plain-app1/plain-app1/app/src/main/java/com/ismartcoding/plain/ui/page/web/CloudflareTunnelLogPage.kt:76:35 No value passed for parameter 'onClick'.
+e: file:///home/runner/work/plain-app1/plain-app1/app/src/main/java/com/ismartcoding/plain/ui/page/web/CloudflareTunnelLogPage.kt:76:74 Argument type mismatch: actual type is '() -> Job', but 'Boolean' was expected.
+> Task :app:compileGithubDebugKotlin FAILED
+> Task :app:copyRoomSchemas NO-SOURCE
+[Incubating] Problems report is available at: file:///home/runner/work/plain-app1/plain-app1/build/reports/problems/problems-report.html
+FAILURE: Build completed with 2 failures.
+52 actionable tasks: 52 executed
+Configuration cache entry discarded with 1 problem.
+1: Task failed with an exception.
+-----------
+* What went wrong:
+Execution failed for task ':app:compileGithubDebugKotlin'.
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.btapi.BuildToolsApiCompilationWork
+   > Compilation error. See log for more details
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+> Get more help at https://help.gradle.org.
+==============================================================================
+2: Task failed with an exception.
+-----------
+* What went wrong:
+Configuration cache problems found in this build.
+1 problem was found storing the configuration cache.
+- Task `:app:downloadCloudflared` of type `org.gradle.api.DefaultTask`: cannot serialize Gradle script object references as these are not supported with the configuration cache.
+  See https://docs.gradle.org/9.4.1/userguide/configuration_cache_requirements.html#config_cache:requirements:disallowed_types
+See the complete report at file:///home/runner/work/plain-app1/plain-app1/build/reports/configuration-cache/5fpwsfvfgxbh1fuaavm97bn4r/40jsjfatn1y4kqqs9dv8otm9n/configuration-cache-report.html
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+> Get more help at https://help.gradle.org.
+==============================================================================
+BUILD FAILED in 4m 58s

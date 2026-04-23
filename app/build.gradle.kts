@@ -139,7 +139,7 @@ android {
     // Task ordering is wired manually in androidComponents { onVariants { ... } } below.
     sourceSets {
         getByName("main") {
-            jniLibs.srcDir(file("$buildDir/generated/cloudflared/jniLibs"))
+            jniLibs.srcDir(file("${project.layout.buildDirectory.get().asFile}/generated/cloudflared/jniLibs"))
         }
     }
 }
@@ -150,34 +150,37 @@ android {
 // native library inside applicationInfo.nativeLibraryDir (the only place modern Android
 // allows executing app-shipped binaries from).
 val cloudflaredVersion = providers.gradleProperty("cloudflaredVersion").orElse("2024.10.1")
-val cloudflaredAbiToAsset = mapOf(
-    "arm64-v8a" to "cloudflared-linux-arm64",
-    "armeabi-v7a" to "cloudflared-linux-arm",
-)
 
 val downloadCloudflared = tasks.register("downloadCloudflared") {
-    val outRoot = File("$buildDir/generated/cloudflared/jniLibs")
-    outputs.dir(outRoot)
-    inputs.property("version", cloudflaredVersion)
+    // Capture all needed values into locals so the task action does not reference
+    // the surrounding script object — required for Gradle 9 configuration cache.
+    val outRootPath = "${project.layout.buildDirectory.get().asFile}/generated/cloudflared/jniLibs"
+    val abiMap = mapOf(
+        "arm64-v8a" to "cloudflared-linux-arm64",
+        "armeabi-v7a" to "cloudflared-linux-arm",
+    )
+    val verProvider = cloudflaredVersion
+    outputs.dir(File(outRootPath))
+    inputs.property("version", verProvider)
     doLast {
-        val ver = cloudflaredVersion.get()
-        cloudflaredAbiToAsset.forEach { (abi, asset) ->
+        val outRoot = File(outRootPath)
+        val ver = verProvider.get()
+        abiMap.forEach { (abi, asset) ->
             val abiDir = File(outRoot, abi).apply { mkdirs() }
             val target = File(abiDir, "libcloudflared.so")
             if (target.exists() && target.length() > 1_000_000) {
-                logger.lifecycle("cloudflared already present for $abi (${target.length()} bytes)")
+                println("cloudflared already present for $abi (${target.length()} bytes)")
                 return@forEach
             }
             val url = "https://github.com/cloudflare/cloudflared/releases/download/$ver/$asset"
-            logger.lifecycle("Downloading cloudflared $ver for $abi from $url")
+            println("Downloading cloudflared $ver for $abi from $url")
             try {
                 URI(url).toURL().openStream().use { input ->
                     target.outputStream().use { out -> input.copyTo(out) }
                 }
                 target.setExecutable(true)
             } catch (e: Exception) {
-                logger.warn("WARNING: failed to download cloudflared for $abi: ${e.message}. Tunnel feature will be disabled in this build.")
-                // Create an empty placeholder so Gradle does not fail the merge step.
+                println("WARNING: failed to download cloudflared for $abi: ${e.message}. Tunnel feature will be disabled in this build.")
                 if (!target.exists()) target.writeBytes(byteArrayOf(0x7f, 'E'.code.toByte(), 'L'.code.toByte(), 'F'.code.toByte()))
             }
         }

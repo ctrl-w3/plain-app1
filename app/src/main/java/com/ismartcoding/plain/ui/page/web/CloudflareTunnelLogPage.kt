@@ -61,24 +61,30 @@ fun CloudflareTunnelLogPage(navController: NavHostController) {
         content = { padding ->
             Column(modifier = Modifier.fillMaxSize().padding(top = padding.calculateTopPadding())) {
                 Row(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-                    PFilledButton(text = stringResource(R.string.cloudflare_tunnel_copy_full_log)) {
-                        scope.launch {
-                            val full = withContext(Dispatchers.IO) { TunnelLogger.readAll(context) }
-                            copyToClip(context, full)
-                            Toast.makeText(
-                                context,
-                                context.getString(R.string.cloudflare_tunnel_log_copied, full.length),
-                                Toast.LENGTH_SHORT,
-                            ).show()
-                        }
-                    }
+                    PFilledButton(
+                        text = stringResource(R.string.cloudflare_tunnel_copy_full_log),
+                        onClick = {
+                            scope.launch {
+                                val full = withContext(Dispatchers.IO) { TunnelLogger.readAll(context) }
+                                copyToClip(context, full)
+                                Toast.makeText(
+                                    context,
+                                    context.getString(R.string.cloudflare_tunnel_log_copied, full.length),
+                                    Toast.LENGTH_SHORT,
+                                ).show()
+                            }
+                        },
+                    )
                     Spacer(modifier = Modifier.width(8.dp))
-                    PFilledButton(text = stringResource(R.string.clear)) {
-                        scope.launch(Dispatchers.IO) {
-                            TunnelLogger.clear(context)
-                            text = ""
-                        }
-                    }
+                    PFilledButton(
+                        text = stringResource(R.string.clear),
+                        onClick = {
+                            scope.launch(Dispatchers.IO) {
+                                TunnelLogger.clear(context)
+                                text = ""
+                            }
+                        },
+                    )
                 }
                 Text(
                     text = if (text.isEmpty()) stringResource(R.string.cloudflare_tunnel_log_empty) else text,
